@@ -1,32 +1,27 @@
 # .github/workflows/deploy-synthetics.yml
 name: Deploy Elastic Synthetics Monitors
-
 on:
   push:
     branches: [ main ]
     paths:
       - 'synthetics/**'
   workflow_dispatch:
-
 jobs:
   deploy-monitors:
     runs-on: self-hosted
-    
     steps:
       - uses: actions/checkout@v3
-      
       - name: Install dependencies
         working-directory: ./synthetics
         run: |
           npm install
           npm install -g @elastic/synthetics
-        
       - name: Deploy monitors
         working-directory: ./synthetics
         run: |
           npx @elastic/synthetics push \
             --project-name "test-synthetics" \
-            --schedule "@hourly" \
+            --schedule "*/5 * * * *" \  # Cada 5 minutos
             --space-id default \
             --auth-type "apiKey" \
             --url "${{ secrets.ELASTICSEARCH_URL }}" \
