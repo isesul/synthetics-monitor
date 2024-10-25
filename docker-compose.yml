@@ -1,5 +1,4 @@
-version: '3.8'
-
+# github-runner/docker-compose.yml
 services:
   runner:
     build: 
