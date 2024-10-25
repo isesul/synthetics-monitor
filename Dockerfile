@@ -10,7 +10,7 @@ ENV RUNNER_WORK_DIRECTORY="_work"
 ENV RUNNER_TOKEN=""
 ENV REPO_URL=""
 
-# Instalar dependencias básicas
+# Instalar dependencias básicas y .NET Core
 RUN apt-get update && apt-get install -y \
     curl \
     jq \
@@ -18,6 +18,10 @@ RUN apt-get update && apt-get install -y \
     tar \
     unzip \
     git \
+    sudo \
+    libicu70 \
+    liblttng-ust1 \
+    libssl3 \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar Node.js 18.x
@@ -25,8 +29,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest
 
-# Crear usuario para el runner
-RUN useradd -m -r -s /bin/bash runner
+# Crear usuario para el runner y darle permisos sudo sin contraseña
+RUN useradd -m -r -s /bin/bash runner && \
+    usermod -aG sudo runner && \
+    echo "runner ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Crear directorios necesarios y configurar permisos
 RUN mkdir -p /usr/lib/node_modules \
@@ -55,6 +61,9 @@ RUN curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L \
     && tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
     && rm actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
 
+# Ejecutar el script de dependencias del runner
+RUN sudo ./bin/installdependencies.sh
+
 # Instalar Elastic Synthetics en el directorio del usuario
 RUN npm install -g @elastic/synthetics
 
@@ -63,4 +72,3 @@ COPY --chown=runner:runner ./start.sh .
 RUN chmod +x ./start.sh
 
 ENTRYPOINT ["./start.sh"]
-
