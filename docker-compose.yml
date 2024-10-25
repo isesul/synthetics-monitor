@@ -1,4 +1,3 @@
-# github-runner/docker-compose.yml
 services:
   runner:
     build: 
@@ -15,12 +14,18 @@ services:
       - ELASTICSEARCH_SSL_VERIFY=${ELASTICSEARCH_SSL_VERIFY:-false}
     volumes:
       - runner-data:/home/runner/_work
+    user: runner
     restart: unless-stopped
     networks:
       - elastic-net
 
 volumes:
   runner-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/runner/_work
+      o: bind
 
 networks:
   elastic-net:

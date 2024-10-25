@@ -38,10 +38,14 @@ RUN useradd -m -r -s /bin/bash runner && \
 RUN mkdir -p /usr/lib/node_modules \
     && mkdir -p /usr/local/lib/node_modules \
     && mkdir -p /home/runner/.npm-global \
+    && mkdir -p /home/runner/_work/_update \
+    && mkdir -p /home/runner/_work/_tool \
+    && mkdir -p /home/runner/_work/_temp \
     && chown -R runner:runner /usr/lib/node_modules \
     && chown -R runner:runner /usr/local/lib/node_modules \
     && chown -R runner:runner /usr/local/bin \
-    && chown -R runner:runner /home/runner/.npm-global
+    && chown -R runner:runner /home/runner/.npm-global \
+    && chown -R runner:runner /home/runner/_work
 
 # Cambiar al usuario runner
 USER runner
@@ -72,3 +76,4 @@ COPY --chown=runner:runner ./start.sh .
 RUN chmod +x ./start.sh
 
 ENTRYPOINT ["./start.sh"]
+
