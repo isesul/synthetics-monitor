@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  runner:
+    build: 
+      context: .
+      args:
+        RUNNER_VERSION: "2.311.0"
+    environment:
+      - RUNNER_TOKEN=${RUNNER_TOKEN}
+      - REPO_URL=${REPO_URL}
+      - RUNNER_NAME=elastic-synthetics-runner
+      - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - ELASTICSEARCH_SSL_VERIFY=${ELASTICSEARCH_SSL_VERIFY:-false}
+    volumes:
+      - runner-data:/home/runner/_work
+    restart: unless-stopped
+    networks:
+      - elastic-net
+
+volumes:
+  runner-data:
+
+networks:
+  elastic-net:
+    driver: bridge

@@ -1,0 +1,18 @@
+{
+  "name": "ElasticSyntheticMonitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "elastic-synthetics .\\journeys\\metlife-orienta.test.js --no-headless --sandbox",
+    "push": "npx @elastic/synthetics push"
+    
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@elastic/synthetics": "^1.13.0"
+  }
+}
+
