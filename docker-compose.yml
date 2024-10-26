@@ -13,10 +13,14 @@ services:
       - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
       - ELASTICSEARCH_SSL_VERIFY=${ELASTICSEARCH_SSL_VERIFY:-false}
     volumes:
-      - ${PWD}/_work:/home/runner/_work
+      - runner_work:/home/runner/_work
     restart: unless-stopped
     networks:
       - elastic-net
+
+volumes:
+  runner_work:
+    name: runner_work
 
 networks:
   elastic-net:
