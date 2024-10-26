@@ -29,23 +29,25 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest
 
-# Crear usuario para el runner y darle permisos sudo sin contraseña
+# Crear usuario para el runner y darle permisos sudo
 RUN useradd -m -r -s /bin/bash runner && \
     usermod -aG sudo runner && \
     echo "runner ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Crear directorios necesarios y configurar permisos
-RUN mkdir -p /usr/lib/node_modules \
-    && mkdir -p /usr/local/lib/node_modules \
-    && mkdir -p /home/runner/.npm-global \
-    && mkdir -p /home/runner/_work/_update \
+# Crear todos los directorios necesarios
+RUN mkdir -p /home/runner/_work/_temp/_github_workflow \
     && mkdir -p /home/runner/_work/_tool \
-    && mkdir -p /home/runner/_work/_temp \
-    && chown -R runner:runner /usr/lib/node_modules \
-    && chown -R runner:runner /usr/local/lib/node_modules \
-    && chown -R runner:runner /usr/local/bin \
-    && chown -R runner:runner /home/runner/.npm-global \
-    && chown -R runner:runner /home/runner/_work
+    && mkdir -p /home/runner/_work/_actions \
+    && mkdir -p /usr/lib/node_modules \
+    && mkdir -p /usr/local/lib/node_modules \
+    && mkdir -p /home/runner/.npm-global
+
+# Configurar todos los permisos necesarios
+RUN chown -R runner:runner /home/runner && \
+    chown -R runner:runner /usr/lib/node_modules && \
+    chown -R runner:runner /usr/local/lib/node_modules && \
+    chown -R runner:runner /usr/local/bin && \
+    chmod -R 777 /home/runner/_work
 
 # Cambiar al usuario runner
 USER runner
@@ -59,16 +61,15 @@ ENV PATH=/home/runner/.npm-global/bin:$PATH
 # Configurar directorio de trabajo
 WORKDIR /home/runner
 
-# Descargar y configurar el runner
-RUN curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L \
-    https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
-    && tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
+# Copiar y extraer el runner
+COPY --chown=runner:runner actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz .
+RUN tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
     && rm actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
 
 # Ejecutar el script de dependencias del runner
 RUN sudo ./bin/installdependencies.sh
 
-# Instalar Elastic Synthetics en el directorio del usuario
+# Instalar Elastic Synthetics
 RUN npm install -g @elastic/synthetics
 
 # Copiar script de inicio

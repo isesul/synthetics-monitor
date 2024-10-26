@@ -25,3 +25,6 @@ sudo chown -R $RUNNER_UID:$RUNNER_GID _work
 
 echo -e "${GREEN}Entorno preparado correctamente${NC}"
 echo "Puedes ejecutar 'docker compose up -d' para iniciar el runner"
+
+curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L \
+    https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
