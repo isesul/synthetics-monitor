@@ -2,7 +2,9 @@ import { journey, step, monitor, expect} from '@elastic/synthetics';
 
 journey('Dashboard Debug', ({ page, context }) => {
 
-  const params = {};
+  const params = {
+    "test":"1.0"
+  };
 
   monitor.use({
     name: '012024_Orienta',

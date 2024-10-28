@@ -27,7 +27,7 @@ fi
 log "Configurando el runner para: ${REPO_URL}"
 log "Iniciando proceso de registro con GitHub..."
 
-# Configurar el runner
+# Configurar el runner con labels
 ./config.sh \
     --url "${REPO_URL}" \
     --token "${RUNNER_TOKEN}" \
@@ -35,15 +35,14 @@ log "Iniciando proceso de registro con GitHub..."
     --work "${RUNNER_WORK_DIRECTORY}" \
     --unattended \
     --replace \
-    --labels elastic-synthetics
+    --labels "self-hosted,elastic-synthetics"
 
 if [ $? -eq 0 ]; then
     log "Runner configurado exitosamente"
-    
-    # Iniciar el runner
     log "Iniciando runner..."
     ./run.sh
 else
     log "Error al configurar el runner"
     exit 1
 fi
+

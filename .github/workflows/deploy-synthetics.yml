@@ -6,24 +6,28 @@ on:
     paths:
       - 'synthetics/**'
   workflow_dispatch:
+
 jobs:
   deploy-monitors:
-    runs-on: self-hosted
+    runs-on: [self-hosted, elastic-synthetics]  # Agregamos el label específico
     steps:
       - uses: actions/checkout@v3
+      
       - name: Install dependencies
         working-directory: ./synthetics
         run: |
           npm install
           npm install -g @elastic/synthetics
+        
       - name: Deploy monitors
         working-directory: ./synthetics
         run: |
           npx @elastic/synthetics push \
             --project-name "test-synthetics" \
-            --schedule "*/5 * * * *" \  # Cada 5 minutos
+            --schedule "*/5 * * * *" \
             --space-id default \
             --auth-type "apiKey" \
             --url "${{ secrets.ELASTICSEARCH_URL }}" \
             --api-key "${{ secrets.ELASTIC_API_KEY }}" \
             --ignore-certificate-errors "${{ secrets.ELASTICSEARCH_SSL_VERIFY }}"
+
