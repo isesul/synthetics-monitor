@@ -3,7 +3,7 @@ import { journey, step, monitor, expect} from '@elastic/synthetics';
 journey('Dashboard Debug', ({ page, context }) => {
 
   const params = {
-    "test":"1.0"
+    "test":"1.1"
   };
 
   monitor.use({
