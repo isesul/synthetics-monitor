@@ -148,7 +148,7 @@ docker compose up -d
 
 ## Referencias
 
-- [Documentación de Elastic Synthetics]((https://www.elastic.co/guide/en/observability/current/synthetics-create-test.html))
+- [Documentación de Elastic Synthetics](https://www.elastic.co/guide/en/observability/current/synthetics-create-test.html)
 - [GitHub Actions Self-hosted Runners](https://docs.github.com/en/actions/hosting-your-own-runners)
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
 
